@@ -1,0 +1,8 @@
+@PlantOrganizer.Api_HostAddress = http://localhost:5001
+
+GET http://localhost:5001/weatherforecast
+
+#
+
+GET http://localhost:5001/plants
+Accept: application/json
