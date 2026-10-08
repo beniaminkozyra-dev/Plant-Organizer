@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PlantOrganizer.Api.Data;
+using PlantOrganizer.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddScoped<IPlantService, PlantService>();
 
 var connectionString = builder.Configuration.GetConnectionString("Garden");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));

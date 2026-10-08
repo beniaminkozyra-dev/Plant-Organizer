@@ -1,10 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PlantOrganizer.Api.Data;
 using PlantOrganizer.Api.Dtos;
-using PlantOrganizer.Api.Mapping;
-using PlantOrganizer.Api.Models;
+using PlantOrganizer.Api.Services;
 
 namespace PlantOrganizer.Api.Controllers;
 
@@ -12,49 +9,42 @@ namespace PlantOrganizer.Api.Controllers;
 [Route("[controller]")]
 public class PlantsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IPlantService _plantService;
 
-    public PlantsController(AppDbContext context)
+    public PlantsController(IPlantService plantService)
     {
-        _context = context;
+        _plantService = plantService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<PlantResponse>>> GetAll()
     {
-        var plants =  await _context.Plants.AsNoTracking().ToListAsync();
-        return plants.Select(p => p.ToResponse()).ToList();
+        return await _plantService.GetAllAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<PlantResponse>> GetById(int id)
     {
-        var plant = await _context.Plants.FindAsync(id);
+        var plant = await _plantService.GetByIdAsync(id);
         if (plant is null)
             return NotFound();
-        return plant.ToResponse();
+        return plant;
     }
 
     [HttpPost]
     public async Task<ActionResult<PlantResponse>> Post(CreatePlantRequest request)
     {
-        var plant = request.ToEntity();
-        _context.Plants.Add(plant);
-        await _context.SaveChangesAsync();
+        var plant = await _plantService.CreateAsync(request);
 
-        return CreatedAtAction(nameof(GetById), new { id = plant.Id }, plant.ToResponse());
+        return CreatedAtAction(nameof(GetById), new { id = plant.Id }, plant);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, UpdatePlantRequest request)
     {
-        var plant = await _context.Plants.FindAsync(id);
-        if(plant is null)
+        var updated = await _plantService.UpdateAsync(id, request);
+        if(updated == false)
             return  NotFound();
-
-        plant.UpdateFrom(request);
-
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
@@ -62,14 +52,10 @@ public class PlantsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var plant = await _context.Plants.FindAsync(id);
+        var deleted = await _plantService.DeleteAsync(id);
 
-        if(plant is null)
+        if(deleted == false)
             return NotFound();
-
-        _context.Plants.Remove(plant);
-
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }
