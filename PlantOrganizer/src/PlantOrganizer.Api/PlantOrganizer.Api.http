@@ -34,6 +34,15 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:5001/plants/1/water
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
 PUT http://localhost:5001/plants/1
 Content-Type: application/json
 

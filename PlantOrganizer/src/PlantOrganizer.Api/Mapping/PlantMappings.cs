@@ -15,7 +15,9 @@ public static class PlantMappings
             plant.WateringIntervalDays,
             plant.SunRequirement,
             plant.MinPotVolumeLiters,
-            plant.DaysToHarvest
+            plant.DaysToHarvest,
+            plant.LastWateredAt,
+            NextWateringDate: plant.LastWateredAt?.AddDays(plant.WateringIntervalDays)
         );
     }
 

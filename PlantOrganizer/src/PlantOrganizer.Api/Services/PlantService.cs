@@ -9,10 +9,14 @@ namespace PlantOrganizer.Api.Services;
 public class PlantService : IPlantService
 {
     private readonly AppDbContext _context;
+    private readonly TimeProvider _timeProvider;
 
-    public PlantService(AppDbContext context)
+    private DateOnly Today => DateOnly.FromDateTime(_timeProvider.GetLocalNow().DateTime);
+
+    public PlantService(AppDbContext context, TimeProvider timeProvider)
     {
         _context = context;
+        _timeProvider = timeProvider;
     }
 
     public async Task<PlantResponse> CreateAsync(CreatePlantRequest request)
@@ -59,5 +63,28 @@ public class PlantService : IPlantService
         plant.UpdateFrom(request);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<PlantResponse?> WaterAsync(int id)
+    {
+        var plant = await _context.Plants.FindAsync(id);
+        if (plant is null)
+            return null;
+
+        plant.LastWateredAt = Today;
+        await _context.SaveChangesAsync();
+        return plant.ToResponse();
+    }
+
+    public async Task<List<PlantResponse>> GetDueForWateringAsync()
+    {
+        var today = Today;
+        var plants = await _context.Plants.AsNoTracking().ToListAsync();
+
+        return plants
+            .Where(p => p.LastWateredAt is null
+                     || p.LastWateredAt.Value.AddDays(p.WateringIntervalDays) <= today)
+            .Select(p => p.ToResponse())
+            .ToList();
     }
 }

@@ -23,4 +23,7 @@ public class Plant
 
     [Range(1,200)]
     public int? DaysToHarvest { get; set; }
+
+    public DateOnly? PlantedAt { get; set; }
+    public DateOnly? LastWateredAt { get; set; }
 }

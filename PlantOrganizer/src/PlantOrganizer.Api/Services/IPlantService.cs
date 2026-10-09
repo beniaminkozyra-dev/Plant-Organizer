@@ -10,4 +10,6 @@ public interface IPlantService
     Task<PlantResponse> CreateAsync(CreatePlantRequest request);
     Task<bool> UpdateAsync(int id, UpdatePlantRequest request);
     Task<bool> DeleteAsync(int id);
+    Task<PlantResponse?> WaterAsync(int id);
+    Task<List<PlantResponse>> GetDueForWateringAsync();
 }

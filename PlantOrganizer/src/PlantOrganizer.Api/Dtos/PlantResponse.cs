@@ -11,5 +11,7 @@ public record PlantResponse(
     int WateringIntervalDays,
     SunRequirement SunRequirement,
     decimal MinPotVolumeLiters,
-    int? DaysToHarvest
+    int? DaysToHarvest,
+    DateOnly? LastWateredAt,
+    DateOnly? NextWateringDate
     );

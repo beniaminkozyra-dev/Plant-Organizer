@@ -59,4 +59,19 @@ public class PlantsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("{id}/water")]
+    public async Task<ActionResult<PlantResponse>> Water(int id)
+    {
+        var plant = await _plantService.WaterAsync(id);
+        if (plant is null)
+            return NotFound();
+        return plant;
+    }
+
+    [HttpGet("due-for-watering")]
+    public async Task<ActionResult<List<PlantResponse>>> GetDueForWatering()
+    {
+        return await _plantService.GetDueForWateringAsync();
+    }
 }
