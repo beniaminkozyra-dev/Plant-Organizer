@@ -47,10 +47,37 @@ public class PlantServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task UpdateAsync_UpdatesPlant_WhenPlantExists()
+    {
+        // Arrange
+        var created = await _service.CreateAsync(new CreatePlantRequest("Monstera","",5, Api.Models.SunRequirement.PartialShade, 7.5M, null));
+
+        var request = new UpdatePlantRequest("Fikus", "", 5, Api.Models.SunRequirement.Shade, 3, 0);
+
+        var updated = await _service.UpdateAsync(created.Id, request);
+        var afterUpdate = await _service.GetByIdAsync(created.Id);
+
+        // Assert
+        Assert.True(updated);
+        Assert.NotNull(afterUpdate);
+        Assert.Equal("Fikus", afterUpdate.Name);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ReturnsFalse_WhenPlantDoesNotExist()
+    {
+        var request = new UpdatePlantRequest("Fikus", "", 5, Api.Models.SunRequirement.Shade, 3, null);
+
+        var result = await _service.UpdateAsync(999, request);
+
+        Assert.False(result);
+    }
+
+    [Fact]
     public async Task CreateAsync_ReturnsPlantWithId()
     {
         // Arrange
-        var request = new CreatePlantRequest("Monstera", "", 7, Api.Models.SunRequirement.Shade, 3, 0);
+        var request = new CreatePlantRequest("Monstera", "", 7, Api.Models.SunRequirement.Shade, 3, null);
 
         // Act
         var result = await _service.CreateAsync(request);
@@ -67,5 +94,21 @@ public class PlantServiceTests : IDisposable
         var result = await _service.DeleteAsync(999);
 
         Assert.False(result);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ReturnsTrue_WhenPlantExist()
+    {
+
+        // Arrange
+        var created = await _service.CreateAsync(new CreatePlantRequest("Monstera", "", 5, Api.Models.SunRequirement.PartialShade, 7.5M, null));
+        
+        // Act
+        var result = await _service.DeleteAsync(created.Id);
+        var afterDelete = await _service.GetByIdAsync(created.Id);
+
+        // Assert
+        Assert.True(result);
+        Assert.Null(afterDelete);
     }
 }
