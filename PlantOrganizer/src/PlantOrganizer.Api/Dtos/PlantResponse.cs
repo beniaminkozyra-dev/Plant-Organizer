@@ -13,5 +13,7 @@ public record PlantResponse(
     decimal MinPotVolumeLiters,
     int? DaysToHarvest,
     DateOnly? LastWateredAt,
-    DateOnly? NextWateringDate
+    DateOnly? NextWateringDate,
+    DateOnly? PlantedAt,
+    DateOnly? ExpectedHarvestDate
     );

@@ -10,5 +10,6 @@ public record UpdatePlantRequest(
     [Range(1, 50)] int WateringIntervalDays,
     SunRequirement SunRequirement,
     [Range(0.1, 50)] decimal MinPotVolumeLiters,
-    [Range(1, 200)] int? DaysToHarvest
+    [Range(1, 200)] int? DaysToHarvest,
+    DateOnly? PlantedAt
     );

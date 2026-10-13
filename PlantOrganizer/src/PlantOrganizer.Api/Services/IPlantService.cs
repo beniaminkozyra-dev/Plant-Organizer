@@ -12,4 +12,5 @@ public interface IPlantService
     Task<bool> DeleteAsync(int id);
     Task<PlantResponse?> WaterAsync(int id);
     Task<List<PlantResponse>> GetDueForWateringAsync();
+    Task<PotCheckResponse?> CheckPotAsync(int id, decimal volumeLiters);
 }

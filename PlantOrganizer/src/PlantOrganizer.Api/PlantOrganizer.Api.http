@@ -9,6 +9,26 @@ Accept: application/json
 
 ###
 
+GET http://localhost:5001/plants/due-for-watering
+
+###
+
+GET http://localhost:5001/plants/6/pot-check?volumeLiters=3
+
+###
+
+GET http://localhost:5001/plants/6/pot-check?volumeLiters=5
+
+###
+
+GET http://localhost:5001/plants/6/pot-check?volumeLiters=0
+
+###
+
+GET http://localhost:5001/plants/999/pot-check?volumeLiters=3
+
+###
+
 POST http://localhost:5001/plants
 Content-Type: application/json
 
@@ -17,7 +37,8 @@ Content-Type: application/json
     "wateringIntervalDays": 2,
     "sunRequirement": 0,
     "minPotVolumeLiters": 5,
-    "daysToHarvest": 40
+    "daysToHarvest": 40,
+    "plantedAt": "2026-06-06"
 }
 
 ###
@@ -35,11 +56,6 @@ Content-Type: application/json
 ###
 
 POST http://localhost:5001/plants/1/water
-Content-Type: application/json
-
-{
-    
-}
 
 ###
 

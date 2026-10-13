@@ -22,7 +22,7 @@ public class PlantsController : ControllerBase
         return await _plantService.GetAllAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<PlantResponse>> GetById(int id)
     {
         var plant = await _plantService.GetByIdAsync(id);
@@ -73,5 +73,17 @@ public class PlantsController : ControllerBase
     public async Task<ActionResult<List<PlantResponse>>> GetDueForWatering()
     {
         return await _plantService.GetDueForWateringAsync();
+    }
+
+    [HttpGet("{id:int}/pot-check")]
+    public async Task<ActionResult<PotCheckResponse>> CheckPot(int id, decimal volumeLiters)
+    {
+        if(volumeLiters <= 0)
+            return BadRequest("volumeLiters must be greater than 0.");
+
+        var result = await _plantService.CheckPotAsync(id, volumeLiters);
+        if (result is null)
+            return NotFound();
+        return result;
     }
 }

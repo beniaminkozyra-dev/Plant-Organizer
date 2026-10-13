@@ -87,4 +87,14 @@ public class PlantService : IPlantService
             .Select(p => p.ToResponse())
             .ToList();
     }
+
+    public async Task<PotCheckResponse?> CheckPotAsync(int id, decimal volumeLiters)
+    {
+        var plant = await GetByIdAsync(id);
+
+        if (plant is null)
+            return null;
+
+        return new PotCheckResponse(id, volumeLiters, plant.MinPotVolumeLiters, plant.MinPotVolumeLiters <= volumeLiters);
+    }
 }
