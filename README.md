@@ -1,5 +1,7 @@
 # Plant Organizer
 
+[![Build and test](https://github.com/beniaminkozyra-dev/Plant-Organizer/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/beniaminkozyra-dev/Plant-Organizer/actions/workflows/build-and-test.yml)
+
 A application for gardeners that tracks plants database and tells you when to water them, when to expect harvest, what pot size a plant need
 
 ## Features
