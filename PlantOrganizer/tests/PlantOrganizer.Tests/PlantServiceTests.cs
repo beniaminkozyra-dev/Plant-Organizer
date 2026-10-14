@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Time.Testing;
 using PlantOrganizer.Api.Data;
 using PlantOrganizer.Api.Dtos;
@@ -28,10 +29,10 @@ public class PlantServiceTests : IDisposable
         _context = new AppDbContext(options);
         _context.Database.EnsureCreated();
 
-        _service = new PlantService(_context, TimeProvider.System);
+        //_service = new PlantService(_context, TimeProvider.System, NullLogger<PlantService>.Instance);
 
         _clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 1, 12, 0, 0, TimeSpan.Zero));
-        _service = new PlantService(_context, _clock);
+        _service = new PlantService(_context, _clock, NullLogger<PlantService>.Instance);
     }
 
     public void Dispose()
