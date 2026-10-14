@@ -10,13 +10,15 @@ public class PlantService : IPlantService
 {
     private readonly AppDbContext _context;
     private readonly TimeProvider _timeProvider;
+    private readonly ILogger<PlantService> _logger;
 
     private DateOnly Today => DateOnly.FromDateTime(_timeProvider.GetLocalNow().DateTime);
 
-    public PlantService(AppDbContext context, TimeProvider timeProvider)
+    public PlantService(AppDbContext context, TimeProvider timeProvider, ILogger<PlantService> logger)
     {
         _context = context;
         _timeProvider = timeProvider;
+        _logger = logger;
     }
 
     public async Task<PlantResponse> CreateAsync(CreatePlantRequest request)
@@ -32,11 +34,13 @@ public class PlantService : IPlantService
     {
         var plant = await _context.Plants.FindAsync(id);
         if(plant is null)
+        {
+            _logger.LogWarning("Plant {PlantId} not found while deleting", id);
             return false;
-
+        }
         _context.Plants.Remove(plant);
         await _context.SaveChangesAsync();
-
+        _logger.LogInformation("Plant {PlantId} deleted", id);
         return true;
     }
 
@@ -58,10 +62,14 @@ public class PlantService : IPlantService
     {
         var plant = await _context.Plants.FindAsync(id);
         if(plant is null)
+        {
+            _logger.LogWarning("Plant {PlantId} not found while updating", id);
             return false;
+        }
 
         plant.UpdateFrom(request);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("Plant {PlantId} updated", id);
         return true;
     }
 
@@ -69,10 +77,15 @@ public class PlantService : IPlantService
     {
         var plant = await _context.Plants.FindAsync(id);
         if (plant is null)
+        {
+            _logger.LogWarning("Plant {PlantId} not found while watering", id);
             return null;
+        }
 
         plant.LastWateredAt = Today;
         await _context.SaveChangesAsync();
+        _logger.LogInformation("Plant {PlantId} watered on {Date}", id, Today);
+
         return plant.ToResponse();
     }
 

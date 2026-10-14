@@ -74,5 +74,9 @@ Content-Type: application/json
 ###
 
 DELETE  http://localhost:5001/plants/3
+
+###
+
+DELETE  http://localhost:5001/plants/999
 Content-Type: application/json
 
